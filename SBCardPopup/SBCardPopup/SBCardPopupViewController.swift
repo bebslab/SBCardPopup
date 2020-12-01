@@ -9,20 +9,9 @@
 import UIKit
 
 public protocol SBCardPopupContent: class {
-    var popupDismisser: SBCardPopupDismisser? { get set }
-    var allowsTapToDismissPopupCard: Bool { get }
-    var allowsSwipeToDismissPopupCard: Bool { get }
-}
-
-public class SBCardPopupDismisser {
-    private weak var popupViewController: SBCardPopupViewController?
-    init(_ viewController: SBCardPopupViewController) {
-        self.popupViewController = viewController
-    }
-    
-    public func dismiss() {
-        popupViewController?.close()
-    }
+    weak var popupViewController: SBCardPopupViewController? {get set}
+    var allowsTapToDismissPopupCard: Bool {get}
+    var allowsSwipeToDismissPopupCard: Bool {get}
 }
 
 public class SBCardPopupViewController: UIViewController {
@@ -132,7 +121,7 @@ public class SBCardPopupViewController: UIViewController {
         containerView.addSubview(contentView)
         
         // Popup Protocol Responder
-        popupProtocolResponder?.popupDismisser = SBCardPopupDismisser(self)
+        popupProtocolResponder?.popupViewController = self
         
         // Apply Constraints
         applyContainerViewConstraints()
@@ -434,8 +423,6 @@ public class SBCardPopupViewController: UIViewController {
             break
         case .ended:
             animate(fromPan: recognizer)
-        @unknown default:
-            break
         }
     
     }
